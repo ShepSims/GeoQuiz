@@ -33,13 +33,13 @@ public class CheatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             mDidCheat = savedInstanceState.getBoolean(KEY_CHEATED);
-            setAnswerShownResult(mDidCheat);
+            setAnswerShownResult(savedInstanceState.getBoolean(KEY_CHEATED));
         }
 
         Log.d(TAG, "CheatActivity OnCreate()");
@@ -62,15 +62,23 @@ public class CheatActivity extends AppCompatActivity {
                 } else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
-                setAnswerShownResult(true);
+                setAnswerShownResult(mDidCheat);
             }
         });
     }
+
     private void setAnswerShownResult(boolean isAnswerShown) {
         Log.d(TAG, "SetAnswerShownResult " + mDidCheat);
         Intent data = new Intent();
         data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
         setResult(RESULT_OK, data);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState " + mDidCheat);
+        savedInstanceState.putBoolean(KEY_CHEATED, mDidCheat);
     }
 }
